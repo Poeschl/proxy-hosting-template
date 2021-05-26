@@ -1,0 +1,16 @@
+name: Check compose files
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  check-docker-compose-file:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: ↩️ Checkout
+      uses: actions/checkout@v2
+
+    - name: 🔍 Check if docker-compose compiles
+      run: docker-compose config
