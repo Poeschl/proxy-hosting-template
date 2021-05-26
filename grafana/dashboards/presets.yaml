@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: 'System'
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/system
+      foldersFromFilesStructure: true
+

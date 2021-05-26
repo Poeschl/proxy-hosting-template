@@ -12,11 +12,14 @@ services:
       - '--ping.entrypoint=websecure'
       - '--providers.docker=true'
       - '--providers.docker.exposedbydefault=false'
+      - '--providers.docker.network=proxy'
 
       - '--entrypoints.web.address=:80'
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
       - '--entrypoints.websecure.address=:443'
       - '--entrypoints.websecure.http.tls=true'
+
+      - '--log.level=DEBUG'
     networks:
       - proxy
     ports:
@@ -60,12 +63,65 @@ services:
       - proxy
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.google-auth.rule=Host(`oauth.localhost`) || PathPrefix(`/_oauth`)'
+      - 'traefik.http.routers.google-auth.rule=PathPrefix(`/_oauth`)'
       - 'traefik.http.routers.google-auth.entrypoints=websecure'
       - 'traefik.http.services.google-auth.loadbalancer.server.port=4181'
       - 'traefik.http.routers.google-auth.middlewares=google-auth'
       - 'traefik.http.middlewares.google-auth.forwardauth.address=http://traefik-forward-auth:4181'
       - 'traefik.http.middlewares.google-auth.forwardauth.authResponseHeaders=X-Forwarded-User'
 
+  grafana:
+    image: grafana/grafana:7.5.6
+    restart: unless-stopped
+    networks:
+      - proxy
+      - monitoring_internal
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/
+    environment:
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_USERS_AUTO_ASSIGN_ORG: 'true'
+      GF_USERS_AUTO_ASSIGN_ORG_ROLE: Admin
+      GF_AUTH_PROXY_ENABLED: 'true'
+      GF_AUTH_PROXY_HEADER_NAME: X-Forwarded-User
+      GF_AUTH_PROXY_HEADER_PROPERTY: email
+      GF_AUTH_PROXY_AUTO_SIGN_UP: 'true'
+      GF_AUTH_PROXY_SYNC_TTL: 60
+      GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN: 'false'
+      GF_AUTH_SIGNOUT_REDIRECT_URL: /_oauth/logout
+      GF_SERVER_ROOT_URL: '%(protocol)s://%(domain)s:%(http_port)s/grafana/'
+      GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)'
+      - 'traefik.http.routers.grafana.entrypoints=websecure'
+      - 'traefik.http.routers.grafana.middlewares=google-auth'
+
+  prometheus:
+    image: prom/prometheus:v2.27.0
+    restart: unless-stopped
+    networks:
+      - monitoring_internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  glances:
+    # TODO: replace with version, when dependencies are included
+    image: nicolargo/glances:alpine-dev
+    restart: unless-stopped
+    networks:
+      - monitoring_internal
+    environment:
+      GLANCES_OPT: "--quiet --export prometheus"
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./glances/config.conf:/glances/conf/glances.conf
+
 networks:
   proxy:
+  monitoring_internal:
