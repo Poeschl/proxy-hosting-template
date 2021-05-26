@@ -2,5 +2,70 @@ version: '3'
 
 services:
 
-  whoami:
-    image: traefik/whoami
+  traefik:
+    image: "traefik:v2.4.7"
+    restart: unless-stopped
+    command:
+      - '--api'
+      - '--api.dashboard=true'
+      - '--ping=true'
+      - '--ping.entrypoint=websecure'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.websecure.address=:443'
+      - '--entrypoints.websecure.http.tls=true'
+    networks:
+      - proxy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+    labels:
+      - 'traefik.enable=true'
+      # since Traefik don't allow to change the api path the referer is used as rule (https://github.com/traefik/traefik/issues/5853)
+      - 'traefik.http.routers.dashboard.rule=PathPrefix(`/traefik/dashboard`) || HeadersRegexp(`Referer`, `.*\/traefik\/dashboard\/.*`)'
+      - 'traefik.http.routers.dashboard.priority=20'
+      - 'traefik.http.routers.dashboard.service=api@internal'
+      - 'traefik.http.routers.dashboard.entrypoints=websecure'
+      - 'traefik.http.routers.dashboard.middlewares=google-auth,strip-prefix-traefik'
+      - 'traefik.http.middlewares.strip-prefix-traefik.stripprefix.prefixes=/traefik'
+
+      - 'traefik.http.routers.dashboard-redirect.rule=PathPrefix(`/traefik`)'
+      - 'traefik.http.routers.dashboard-redirect.priority=10'
+      - 'traefik.http.routers.dashboard-redirect.service=noop@internal'
+      - 'traefik.http.routers.dashboard-redirect.entrypoints=websecure'
+      - 'traefik.http.routers.dashboard-redirect.middlewares=google-auth,dashboard-redirect'
+      - 'traefik.http.middlewares.dashboard-redirect.redirectregex.regex=^(https://.*)/traefik.*'
+      - 'traefik.http.middlewares.dashboard-redirect.redirectregex.replacement=$${1}/traefik/dashboard/'
+
+      - 'traefik.http.middlewares.securityHeaders.headers.sslredirect=true'
+      - 'traefik.http.middlewares.securityHeaders.headers.contentTypeNosniff=true'
+
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:2.2.0
+    restart: unless-stopped
+    environment:
+      DEFAULT_PROVIDER: google
+      PROVIDERS_GOOGLE_CLIENT_ID: ${google_client_id}
+      PROVIDERS_GOOGLE_CLIENT_SECRET: ${google_client_secret}
+      SECRET: ${auth_secret}
+      INSECURE_COOKIE: ${auth_insecure}
+      WHITELIST: ${auth_email_whitelist}
+      LOG_LEVEL: debug
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.google-auth.rule=Host(`oauth.localhost`) || PathPrefix(`/_oauth`)'
+      - 'traefik.http.routers.google-auth.entrypoints=websecure'
+      - 'traefik.http.services.google-auth.loadbalancer.server.port=4181'
+      - 'traefik.http.routers.google-auth.middlewares=google-auth'
+      - 'traefik.http.middlewares.google-auth.forwardauth.address=http://traefik-forward-auth:4181'
+      - 'traefik.http.middlewares.google-auth.forwardauth.authResponseHeaders=X-Forwarded-User'
+
+networks:
+  proxy:
