@@ -45,9 +45,6 @@ services:
       - 'traefik.http.middlewares.dashboard-redirect.redirectregex.regex=^(https://.*)/traefik.*'
       - 'traefik.http.middlewares.dashboard-redirect.redirectregex.replacement=$${1}/traefik/dashboard/'
 
-      - 'traefik.http.middlewares.securityHeaders.headers.sslredirect=true'
-      - 'traefik.http.middlewares.securityHeaders.headers.contentTypeNosniff=true'
-
   traefik-forward-auth:
     image: thomseddon/traefik-forward-auth:2.2.0
     restart: unless-stopped
