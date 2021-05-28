@@ -59,7 +59,15 @@ If you don't want to use Let's encrypt remove all lines of the traefik service c
 
 ### Include other services to Traefik
 
-TBD: docker-compose.override.yaml
+To include other docker container in the reverse proxy, make sure those container are in the `proxy` docker network and add those labels to the running container (Code from grafana for example):
+
+```yaml
+traefik.enable=true
+traefik.http.routers.grafana.rule=PathPrefix(`/grafana`) # The rule needs to be adjusted to your needs. For more see https://doc.traefik.io/traefik/routing/routers/#rule
+traefik.http.routers.grafana.entrypoints=websecure # This specifies that the container is available over the https entrypoint.
+traefik.http.routers.grafana.middlewares=google-auth # This enables the forward authentication for the container. With it only authenticated users can access your service.
+
+```
 
 ## Grafana
 
