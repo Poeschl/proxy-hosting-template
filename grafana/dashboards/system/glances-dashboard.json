@@ -189,56 +189,9 @@
       "seriesOverrides": [],
       "spaceLength": 10,
       "spyable": true,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
-        {
-          "alias": "1min",
-          "column": "min1",
-          "dsType": "influxdb",
-          "exemplar": true,
-          "expr": "glances_load_cpucore",
-          "format": "time_series",
-          "function": "mean",
-          "groupBy": [
-            {
-              "params": [
-                "auto"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "none"
-              ],
-              "type": "fill"
-            }
-          ],
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "Average",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "min1"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "series": "load",
-          "tags": [],
-          "target": "randomWalk('random walk')"
-        },
         {
           "alias": "5mins",
           "column": "min5",
@@ -399,6 +352,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:161",
           "format": "short",
           "logBase": 1,
           "max": null,
@@ -406,6 +360,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:162",
           "format": "short",
           "logBase": 1,
           "max": null,
@@ -917,7 +872,9 @@
       "editable": true,
       "error": false,
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "unit": "decbytes"
+        },
         "overrides": []
       },
       "fill": 3,
@@ -967,7 +924,7 @@
           "column": "enp0s25.rx",
           "dsType": "influxdb",
           "exemplar": true,
-          "expr": "glances_network_eth0_rx / glances_network_eth0_time_since_update * 8",
+          "expr": "glances_network_eth0_rx / 8",
           "function": "mean",
           "groupBy": [
             {
@@ -1013,7 +970,7 @@
           "column": "eth0.tx*-1",
           "dsType": "influxdb",
           "exemplar": true,
-          "expr": "glances_network_eth0_tx / glances_network_eth0_time_since_update * 8",
+          "expr": "glances_network_eth0_tx / 8",
           "function": "mean",
           "groupBy": [
             {
@@ -1074,13 +1031,15 @@
       },
       "yaxes": [
         {
-          "format": "bps",
+          "$$hashKey": "object:81",
+          "format": "decbytes",
           "logBase": 1,
           "max": null,
           "min": null,
           "show": true
         },
         {
+          "$$hashKey": "object:82",
           "format": "short",
           "logBase": 1,
           "max": null,
@@ -2685,7 +2644,7 @@
       }
     }
   ],
-  "refresh": "5s",
+  "refresh": "30s",
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -2693,7 +2652,7 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -2729,5 +2688,5 @@
   "timezone": "browser",
   "title": "System (Glances)",
   "uid": "000000002",
-  "version": 5
+  "version": 1
 }
