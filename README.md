@@ -61,7 +61,9 @@ If you don't want to use Let's encrypt remove all lines of the traefik service c
 
 ### Include other services to Traefik
 
-To include other docker container in the reverse proxy, make sure those container are in the `proxy` docker network and add those labels to the running container (Code from grafana for example):
+To include other docker container in the reverse proxy, make sure those container are in the `proxy` docker network.
+Hint: when using in multiple docker-composes create a global network, otherwise die container can't communicate.
+And add those labels to the running container (Code from grafana for example):
 
 ```yaml
 traefik.enable=true
@@ -70,6 +72,42 @@ traefik.http.routers.grafana.entrypoints=websecure # This specifies that the con
 traefik.http.routers.grafana.middlewares=google-auth # This enables the forward authentication for the container. With it only authenticated users can access your service.
 
 ```
+Don't forget to also change the routers name (part behind `routers.`).
+
+If the other service is also executed by docker-compose it might make sense to use a `docker-compose.override.yaml` to set some additional changes to the existing file.
+For example I show you one of mine:
+
+```yaml
+version: '3'
+
+services:
+  database:
+    networks:
+      - internal
+
+  scrapy-do:
+    ports: 
+      - 7654
+    networks:
+      - internal
+      - proxy
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.scrapy.rule=Host(`some.host.xyz`)'
+      - 'traefik.http.routers.scrapy.priority=1'
+      - 'traefik.http.routers.scrapy.entrypoints=websecure'
+      - 'traefik.http.routers.scrapy.middlewares=google-auth,https-redirect'
+
+      - 'traefik.http.middlewares.https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.middlewares.https-redirect.redirectscheme.permanent=true'
+
+networks:
+  internal:
+  proxy:
+    external: true
+```
+
 
 ## Grafana
 
