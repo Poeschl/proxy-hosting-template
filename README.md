@@ -22,6 +22,8 @@ Public https port: `443`
 
 Traefik Dashboard (🔒️): `https://<host>/traefik/dashboard/` (Don't forget the last slash)
 
+Ping: `https://<host>/ping`
+
 ### Grafana
 
 Dashboards (🔒️): `https://<host>/grafana`
