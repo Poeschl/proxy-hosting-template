@@ -24,7 +24,7 @@ services:
       - '--certificatesresolvers.letsencrypt.acme.storage=acme.json'
       - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'
 
-      - '--log.level=DEBUG'
+      #- '--log.level=DEBUG'
     networks:
       - proxy
     ports:
@@ -60,7 +60,7 @@ services:
       SECRET: ${auth_secret}
       INSECURE_COOKIE: ${auth_insecure}
       WHITELIST: ${auth_email_whitelist}
-      LOG_LEVEL: debug
+      #LOG_LEVEL: debug
     networks:
       - proxy
     labels:
