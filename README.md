@@ -22,6 +22,10 @@ Public https port: `443`
 
 Traefik Dashboard (🔒️): `https://<host>/traefik/dashboard/` (Don't forget the last slash)
 
+### Grafana
+
+Dashboards (🔒️): `https://<host>/grafana`
+
 ## Architecture
 
 TBD: Draw diagram
@@ -58,9 +62,9 @@ TBD: docker-compose.override.yaml
 
 ## Grafana
 
-TBD: Image Dashboard
+![Grafana Dashboard](assets/grafana-sample.png)
 
-Grafana will be provisioned with Prometeus and a basic dashboard which monitor the host system.
+Grafana will be provisioned with Prometeus and a basic dashboard to monitor the host system and all running docker container.
 
 ## Configuration
 

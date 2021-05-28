@@ -73,8 +73,6 @@ services:
     networks:
       - proxy
       - monitoring_internal
-    ports:
-      - 3000:3000
     volumes:
       - ./grafana:/etc/grafana/provisioning/
     environment:
@@ -86,7 +84,8 @@ services:
       GF_AUTH_PROXY_HEADER_PROPERTY: email
       GF_AUTH_PROXY_AUTO_SIGN_UP: 'true'
       GF_AUTH_PROXY_SYNC_TTL: 60
-      GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN: 'false'
+      GF_AUTH_PROXY_ENABLE_LOGIN_TOKEN: 'true'
+      GF_AUTH_DISABLE_LOGIN_FORM: 'true'
       GF_AUTH_SIGNOUT_REDIRECT_URL: /_oauth/logout
       GF_SERVER_ROOT_URL: '%(protocol)s://%(domain)s:%(http_port)s/grafana/'
       GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
