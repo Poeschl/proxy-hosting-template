@@ -30,7 +30,7 @@ Dashboards (🔒️): `https://<host>/grafana`
 
 ## Architecture
 
-TBD: Draw diagram
+![Grafana Dashboard](assets/architecture.png)
 
 The architecture includes [Glances](https://github.com/nicolargo/glances) to monitor the system conditions.
 It offers a prometheus interface which will be scraped by (obviously) Prometeus.
