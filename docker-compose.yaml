@@ -108,7 +108,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - 'prometheus-data:/prometheus'
+      - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
 
   glances:
     # TODO: replace with version, when dependencies are included
@@ -126,3 +127,6 @@ services:
 networks:
   proxy:
   monitoring_internal:
+
+volumes:
+  prometheus-data:
