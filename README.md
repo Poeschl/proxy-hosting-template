@@ -66,3 +66,8 @@ Grafana will be provisioned with Prometeus and a basic dashboard which monitor t
 
 All the configuration for secrets and options is contained in a `.env` file at the repository root folder.
 To start your config use the `.env.sample` file, which contains all the used properties.
+
+## Disclaimer
+
+The setup here will be provided without any security warranty.
+Make sure for yourself that everything is secured and whitelisted users have the correct rights.
