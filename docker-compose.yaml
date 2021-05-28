@@ -18,6 +18,11 @@ services:
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
       - '--entrypoints.websecure.address=:443'
       - '--entrypoints.websecure.http.tls=true'
+      - '--entrypoints.websecure.http.tls.certResolver=letsencrypt'
+
+      - '--certificatesresolvers.letsencrypt.acme.email=${letsencrypt_email}'
+      - '--certificatesresolvers.letsencrypt.acme.storage=acme.json'
+      - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'
 
       - '--log.level=DEBUG'
     networks:
@@ -30,7 +35,7 @@ services:
     labels:
       - 'traefik.enable=true'
       # since Traefik don't allow to change the api path the referer is used as rule (https://github.com/traefik/traefik/issues/5853)
-      - 'traefik.http.routers.dashboard.rule=PathPrefix(`/traefik/dashboard`) || HeadersRegexp(`Referer`, `.*\/traefik\/dashboard\/.*`)'
+      - 'traefik.http.routers.dashboard.rule=Host(`${letsencrypt_domain}`) && (PathPrefix(`/traefik/dashboard`) || HeadersRegexp(`Referer`, `.*\/traefik\/dashboard\/.*`))'
       - 'traefik.http.routers.dashboard.priority=20'
       - 'traefik.http.routers.dashboard.service=api@internal'
       - 'traefik.http.routers.dashboard.entrypoints=websecure'

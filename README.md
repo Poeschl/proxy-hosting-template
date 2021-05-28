@@ -52,9 +52,10 @@ When used the access needs to be authenticated to proceed.
 
 The internal dashboard is secured by it as well as Grafana via the `X-Forwarded-User` header.
 
-### Lets Encrypt
+### Let's Encrypt
 
-//TBD
+For Let's Encrypt certificates an email and a (sub)domain are required. Both need to be specified at the `.env` file.
+If you don't want to use Let's encrypt remove all lines of the traefik service containing `letsencrypt`.
 
 ### Include other services to Traefik
 
