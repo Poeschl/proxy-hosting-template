@@ -480,7 +480,9 @@
       "editable": true,
       "error": false,
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "unit": "percent"
+        },
         "overrides": []
       },
       "fill": 0,
@@ -516,11 +518,28 @@
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:272",
+          "alias": "total",
+          "stack": false
+        }
+      ],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
+        {
+          "exemplar": true,
+          "expr": "glances_cpu_total",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "total",
+          "refId": "D"
+        },
         {
           "alias": "User",
           "column": "user",
@@ -542,6 +561,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "interval": "",
           "legendFormat": "user",
           "orderByTime": "ASC",
@@ -586,6 +606,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "interval": "",
           "legendFormat": "system",
           "orderByTime": "ASC",
@@ -631,6 +652,7 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "interval": "",
           "legendFormat": "iowait",
           "orderByTime": "ASC",
@@ -676,6 +698,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:88",
           "format": "percent",
           "logBase": 1,
           "max": null,
@@ -683,6 +706,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:89",
           "format": "short",
           "logBase": 1,
           "max": null,
@@ -873,7 +897,7 @@
       "error": false,
       "fieldConfig": {
         "defaults": {
-          "unit": "decbytes"
+          "unit": "bits"
         },
         "overrides": []
       },
@@ -911,6 +935,7 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
+          "$$hashKey": "object:424",
           "alias": "Tx",
           "yaxis": 1
         }
@@ -924,7 +949,7 @@
           "column": "enp0s25.rx",
           "dsType": "influxdb",
           "exemplar": true,
-          "expr": "glances_network_eth0_rx / 8",
+          "expr": "glances_network_eth0_rx",
           "function": "mean",
           "groupBy": [
             {
@@ -970,7 +995,7 @@
           "column": "eth0.tx*-1",
           "dsType": "influxdb",
           "exemplar": true,
-          "expr": "glances_network_eth0_tx / 8",
+          "expr": "glances_network_eth0_tx",
           "function": "mean",
           "groupBy": [
             {
@@ -1032,7 +1057,7 @@
       "yaxes": [
         {
           "$$hashKey": "object:81",
-          "format": "decbytes",
+          "format": "bits",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -2644,7 +2669,7 @@
       }
     }
   ],
-  "refresh": "30s",
+  "refresh": false,
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -2652,8 +2677,8 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
-    "to": "now"
+    "from": "2021-05-29T06:59:13.233Z",
+    "to": "2021-05-29T07:18:02.682Z"
   },
   "timepicker": {
     "collapse": false,

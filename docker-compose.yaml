@@ -79,7 +79,8 @@ services:
       - proxy
       - monitoring_internal
     volumes:
-      - ./grafana:/etc/grafana/provisioning/
+      - './grafana:/etc/grafana/provisioning/'
+      - 'grafana-data:/var/lib/grafana'
     environment:
       GF_USERS_ALLOW_SIGN_UP: 'false'
       GF_USERS_AUTO_ASSIGN_ORG: 'true'
@@ -130,3 +131,4 @@ networks:
 
 volumes:
   prometheus-data:
+  grafana-data:
