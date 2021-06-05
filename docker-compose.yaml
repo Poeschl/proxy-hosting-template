@@ -21,7 +21,7 @@ services:
       - '--entrypoints.websecure.http.tls.certResolver=letsencrypt'
 
       - '--certificatesresolvers.letsencrypt.acme.email=${letsencrypt_email}'
-      - '--certificatesresolvers.letsencrypt.acme.storage=acme.json'
+      - '--certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json'
       - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'
 
       #- '--log.level=DEBUG'
@@ -32,7 +32,7 @@ services:
       - '443:443'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - 'acme-store:/acme.json'
+      - 'acme-store:/acme'
     labels:
       - 'traefik.enable=true'
       # since Traefik don't allow to change the api path the referer is used as rule (https://github.com/traefik/traefik/issues/5853)
