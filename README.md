@@ -10,6 +10,9 @@ This all will be realized in docker to have as less dependencies as possible.
 I will use that repository on linux based hosts und require a full docker and docker-compose installation on it.
 Instructions to install docker can be found [here](https://docs.docker.com/engine/install/#server).
 
+For redirecting the glances container metrics from localhost inside the container network a very new feature is used.
+This requires _docker version > 20.10.0_ to be installed.
+
 ## Endpoints
 
 🔒️ means its authenticated with a Google login and the email whitelist.
