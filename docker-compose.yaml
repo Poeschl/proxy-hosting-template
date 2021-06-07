@@ -64,6 +64,7 @@ services:
       #LOG_LEVEL: debug
     networks:
       - proxy
+    command: ./traefik-forward-auth --rule.snapshots.action=allow --rule.snapshots.rule="PathPrefix(`/grafana/dashboard/snapshot`) || PathPrefix(`/grafana/public`) || PathPrefix(`/grafana/api/snapshots`)"
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.google-auth.rule=PathPrefix(`/_oauth`)'
