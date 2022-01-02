@@ -115,7 +115,7 @@ services:
       - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
 
   glances:
-    image: nicolargo/glances:alpine-3.2.2-full
+    image: nicolargo/glances:3.2.4.2-full
     restart: unless-stopped
     network_mode: host
     pid: host
