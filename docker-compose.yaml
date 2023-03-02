@@ -3,7 +3,7 @@ version: '3'
 services:
 
   traefik:
-    image: "traefik:v2.6.0"
+    image: "traefik:v2.9.8"
     restart: unless-stopped
     command:
       - '--api'
@@ -75,7 +75,7 @@ services:
       - 'traefik.http.middlewares.google-auth.forwardauth.authResponseHeaders=X-Forwarded-User'
 
   grafana:
-    image: grafana/grafana:8.3.4
+    image: grafana/grafana:9.4.2
     restart: unless-stopped
     networks:
       - proxy
@@ -104,7 +104,7 @@ services:
       - 'traefik.http.routers.grafana.middlewares=google-auth'
 
   prometheus:
-    image: prom/prometheus:v2.33.0
+    image: prom/prometheus:v2.37.6
     restart: unless-stopped
     networks:
       - monitoring_internal
@@ -115,7 +115,7 @@ services:
       - './prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
 
   glances:
-    image: nicolargo/glances:3.2.4.2-full
+    image: nicolargo/glances:3.3.1.1-full
     restart: unless-stopped
     network_mode: host
     pid: host
